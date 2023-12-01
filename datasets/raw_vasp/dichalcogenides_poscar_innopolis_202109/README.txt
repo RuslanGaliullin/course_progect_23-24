@@ -1,0 +1,2 @@
+'dichalcogenides/', 'defects.csv', 'descriptors.csv' contain information about defefects with cells 4x4, 5x5, 6x6
+'dichalcogenides8/', 'defects8.csv', 'descriptors8.csv' contain information about defefects with cell 8x8
