@@ -1,5 +1,0 @@
-[core]
-    remote = mys3http
-    autostage = true
-['remote "mys3http"']
-    url = https://eu1-s3.virtuozzo.com/ai4materialdesign/dvc
