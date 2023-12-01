@@ -13,5 +13,7 @@ catboost_info
 **/*.cache
 **/*.sqlite3
 .idea
+.venv
+.dvc
 ai4material_design*.o*
 params.yaml.bak
