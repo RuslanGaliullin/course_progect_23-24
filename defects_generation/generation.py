@@ -4,7 +4,7 @@ import json
 import pymatgen
 from pymatgen.analysis.defects.core import Vacancy, Substitution
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.analysis.structure_matcher import PointDefectComparator
+# from pymatgen.analysis.structure_matcher import PointDefectComparator
 from pymatgen.core import Element, Site
 from pymatgen.io.cif import CifParser
 
@@ -17,10 +17,11 @@ def is_copy(current_generator: pymatgen.analysis.defects.core.Defect,
     """
     is_copy = False
     for generator in generated_set:
-        comparator = PointDefectComparator()
-        if (comparator.are_equal(current_generator, generator)):
-            is_copy = True
-            break
+        is_copy = False
+        # comparator = PointDefectComparator()
+        # if (comparator.are_equal(current_generator, generator)):
+        #     is_copy = True
+        #     break
     return is_copy
 
 
@@ -49,11 +50,11 @@ def generate(defect_descriptor: dict,
     
     if (level == 0):
         if (defect['type'] == 'substitution'):
-            gen = Substitution(structure, defect_site=defect['sites'][0])
+            gen = Substitution(structure, site=defect['sites'][0])
         elif (defect['type'] == 'vacancy'):
-            gen = Vacancy(structure, defect_site=defect['sites'][0])
+            gen = Vacancy(structure, site=defect['sites'][0])
         
-        defect_structure = gen.generate_defect_structure()
+        defect_structure = gen.get_supercell_structure()
         generate(defect_descriptor, defect_structure.copy(), 1,
                              [defect['sites'][0].coords], generated_set)  
         
@@ -70,9 +71,9 @@ def generate(defect_descriptor: dict,
                     
             # point defect
             if (defect['type'] == 'substitution'):
-                gen = Substitution(structure, defect_site=site)     
+                gen = Substitution(structure, site=site)     
             if (defect['type'] == 'vacancy'):
-                gen = Vacancy(structure, defect_site=site)
+                gen = Vacancy(structure, site=site)
                 
             if not is_copy(gen, generated_set):
                 generated_set.append(gen)
@@ -89,10 +90,10 @@ def generate(defect_descriptor: dict,
                 
             # point defect
             if (defect['type'] == 'substitution'):
-                gen = Substitution(structure, defect_site=site)
+                gen = Substitution(structure, site=site)
             if (defect['type'] == 'vacancy'):
-                gen = Vacancy(structure, defect_site=site)
-            defect_structure = gen.generate_defect_structure()
+                gen = Vacancy(structure, site=site)
+            defect_structure = gen.get_supercell_structure()
             next_defect_coords = defected_coords.copy()
             next_defect_coords.append(site.coords)
             generate(defect_descriptor, defect_structure.copy(), level+1,

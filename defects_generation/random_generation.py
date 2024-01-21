@@ -49,10 +49,10 @@ def generate_one_random_defect(defect_descriptor: dict,
             site = np.random.choice(defect_descriptor['defects'][i]['sites'])
         defected_sites.append(site) 
         if (defect_descriptor['defects'][i]['type'] == 'substitution'):
-            gen = Substitution(structure, defect_site=site)
+            gen = Substitution(structure, site=site)
         elif (defect_descriptor['defects'][i]['type'] == 'vacancy'):
-            gen = Vacancy(structure, defect_site=site)
-        structure = gen.generate_defect_structure()
+            gen = Vacancy(structure, site=site)
+        structure = gen.get_supercell_structure()
     return structure
 
 
@@ -77,12 +77,14 @@ def prepare_sites(defect_descriptor: dict,
             for site in bulk_structure.copy():
                 if (site.specie == Element(defect['element'])):
                     defect['sites'].append(site)
+                    print(site.coords)
 
 
 def create_supercell(defect_descriptor: dict) -> pymatgen.core.structure.Structure:
     """ Applies supercell to the defect """
     bulk_structure = CifParser(os.path.join(BASE_PATH, f'''{defect_descriptor['base']}.cif''')).get_structures()[0]
     bulk_structure.make_supercell(defect_descriptor["cell"])
+    print(len(bulk_structure.species))
     return bulk_structure
 
 
@@ -94,6 +96,7 @@ def generate_defect_set(defect_descriptor: dict) -> list:
         Descriptor examples can be found in folder ./X1S6_descriptors.json
     """
     bulk_structure = create_supercell(defect_descriptor)
+    print(100000)
     prepare_sites(defect_descriptor, bulk_structure.copy())
     generated_set = []
     # counter counts the number of trials for defect creation
